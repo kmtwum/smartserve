@@ -1,5 +1,4 @@
 import type { Knex } from "knex";
-import path from "path";
 
 const config: Record<string, Knex.Config> = {
   development: {
@@ -12,11 +11,11 @@ const config: Record<string, Knex.Config> = {
       database: "smartserve",
     },
     migrations: {
-      directory: path.join(__dirname, "db", "migrations"),
+      directory: "./db/migrations",
       extension: "ts",
     },
     seeds: {
-      directory: path.join(__dirname, "db", "seeds"),
+      directory: "./db/seeds",
       extension: "ts",
     },
   },
@@ -25,11 +24,11 @@ const config: Record<string, Knex.Config> = {
     connection: process.env.DATABASE_URL,
     pool: { min: 2, max: 10 },
     migrations: {
-      directory: path.join(__dirname, "db", "migrations"),
+      directory: "./db/migrations",
       extension: "ts",
     },
     seeds: {
-      directory: path.join(__dirname, "db", "seeds"),
+      directory: "./db/seeds",
       extension: "ts",
     },
   },
