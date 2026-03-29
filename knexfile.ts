@@ -6,13 +6,7 @@ loadEnv();
 const config: Record<string, Knex.Config> = {
   development: {
     client: "pg",
-    connection: process.env.DATABASE_URL || {
-      host: "localhost",
-      port: 5432,
-      user: "postgres",
-      password: "postgres",
-      database: "smartserve",
-    },
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: "./db/migrations",
       extension: "ts",
