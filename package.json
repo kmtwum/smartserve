@@ -12,12 +12,16 @@
     "seed": "knex seed:run"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "bcrypt": "^6.0.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.3.1",
     "knex": "^3.1.0",
     "next": "^15.2.0",
     "next-auth": "^5.0.0-beta.25",
     "pg": "^8.13.0",
     "react": "^19.0.0",
+    "react-day-picker": "^9.14.0",
     "react-dom": "^19.0.0",
     "stripe": "^17.5.0",
     "uuid": "^11.1.0",
