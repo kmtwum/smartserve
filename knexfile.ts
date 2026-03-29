@@ -1,4 +1,7 @@
 import type { Knex } from "knex";
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env.development.local" });
+loadEnv();
 
 const config: Record<string, Knex.Config> = {
   development: {
