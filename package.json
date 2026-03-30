@@ -9,7 +9,9 @@
     "lint": "next lint",
     "migrate": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "deploy-preview": "vercel build --target=preview && vercel --prebuilt --target=preview",
+    "deploy-prod": "vercel build --target=production && vercel --prebuilt --target=production"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
