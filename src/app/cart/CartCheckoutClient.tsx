@@ -92,8 +92,29 @@ export default function CartCheckoutClient({ cart }: { cart: CartData }) {
         throw new Error(data.message ?? "Booking failed");
       }
 
-      // Success! Future: Redirect to stripe here.
-      // For now, redirect to account dashboard where pending bookings sit.
+      // Automatically spin up a Stripe checkout session with the newly created bookings
+      // The bookings API should now return the newly generated group_id (the first item's group_id is sufficient)
+      const groupId = data.bookings?.[0]?.group_id;
+
+      if (groupId) {
+        const checkoutRes = await fetch("/api/payments/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ groupId }),
+        });
+
+        const checkoutData = await checkoutRes.json();
+        
+        if (checkoutRes.ok && checkoutData.url) {
+          // Send user straight to Stripe
+          window.location.href = checkoutData.url;
+          return;
+        } else {
+          throw new Error(checkoutData.message ?? "Failed to initiate payment");
+        }
+      }
+
+      // Fallback
       router.push("/account");
       router.refresh();
 

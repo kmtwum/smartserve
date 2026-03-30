@@ -113,6 +113,7 @@ export const bookingService = {
       let currentMinute = parseInt(startTime.split(":")[1]);
       
       const insertedBookings = [];
+      const groupId = crypto.randomUUID();
 
       for (const item of items) {
         // Handle quantity properly (e.g. 2 TV mounts = 2 back-to-back bookings)
@@ -129,6 +130,7 @@ export const bookingService = {
               time_slot: slot,
               status: "pending",
               payment_status: "pending",
+              group_id: groupId,
             })
             .returning("*");
 
@@ -150,5 +152,30 @@ export const bookingService = {
     });
 
     return newBookings;
+  },
+
+  /**
+   * Fetches all bookings for a specific user, including full service details.
+   */
+  async getUserBookings(userId: string) {
+    const db = getDb();
+    
+    return db("bookings")
+      .join("services", "bookings.service_id", "=", "services.id")
+      .where("bookings.user_id", userId)
+      .select(
+        "bookings.id",
+        "bookings.date",
+        "bookings.time_slot",
+        "bookings.status",
+        "bookings.payment_status",
+        "bookings.created_at",
+        "bookings.group_id",
+        "services.name as service_name",
+        "services.price",
+        "services.duration_minutes"
+      )
+      .orderBy("bookings.date", "desc")
+      .orderBy("bookings.time_slot", "desc");
   }
 };

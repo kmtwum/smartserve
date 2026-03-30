@@ -50,6 +50,36 @@ export default function ServiceCard({
       }
       
       router.refresh();
+
+      import("react-hot-toast").then((mod) => {
+        mod.toast.success(
+          (t) => (
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <span>
+                <strong>{name}</strong> added to cart!
+              </span>
+              <button
+                onClick={() => {
+                  mod.toast.dismiss(t.id);
+                  router.push("/cart");
+                }}
+                style={{
+                  background: "var(--primary)",
+                  color: "white",
+                  border: "none",
+                  padding: "0.25rem 0.75rem",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "0.875rem",
+                }}
+              >
+                View Cart
+              </button>
+            </div>
+          ),
+          { duration: 4000 }
+        );
+      });
     } catch (error) {
       console.error(error);
       alert("Something went wrong adding item to the cart.");
