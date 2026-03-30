@@ -1,12 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
-          smart<span>.serve</span>
+        <Link href="/">
+          <Image 
+            src="/images/logo.png" 
+            alt="Smart.Serve Logo" 
+            width={50}
+            height={30}
+            priority
+            style={{ objectFit: 'contain' }}
+          />
         </Link>
         <div className={styles.navLinks}>
           <Link href="/services" className={styles.link}>

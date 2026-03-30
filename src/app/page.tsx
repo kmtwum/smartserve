@@ -9,7 +9,7 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.title}>
-            smart<span className={styles.primaryText}>.serve</span>
+            Smart<span className={styles.primaryText}>.Serve</span>
           </h1>
           <p className={styles.subtitle}>
             Professional home appliance & device installation services.
@@ -80,7 +80,7 @@ export default function Home() {
           <div className={styles.serviceCard}>
             <div className={styles.serviceImageWrapper}>
               <Image 
-                src="/images/feature_booking.png" 
+                src="/images/feature_booking.jpeg"
                 alt="Easy booking on smartphone" 
                 fill 
                 className={styles.serviceImage}
@@ -95,7 +95,7 @@ export default function Home() {
           <div className={styles.serviceCard}>
             <div className={styles.serviceImageWrapper}>
               <Image 
-                src="/images/feature_service.png" 
+                src="/images/feature_service.png"
                 alt="Smart home devices on table" 
                 fill 
                 className={styles.serviceImage}
