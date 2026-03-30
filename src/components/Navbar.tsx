@@ -12,6 +12,9 @@ export default function Navbar() {
           <Link href="/services" className={styles.link}>
             Services
           </Link>
+          <Link href="/gallery" className={styles.link}>
+            Gallery
+          </Link>
           <Link href="/cart" className={styles.link}>
             Cart
           </Link>
