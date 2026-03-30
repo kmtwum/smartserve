@@ -8,6 +8,7 @@ import styles from "./LoginForm.module.css"; // Reuse styling
 export default function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -19,10 +20,11 @@ export default function RegisterForm() {
     setError("");
 
     try {
+      // Use state variables directly since they are guaranteed strings
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, phone, password }),
       });
 
       const data = await res.json();
@@ -82,6 +84,22 @@ export default function RegisterForm() {
             className={styles.input}
             placeholder="you@example.com"
           />
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            required
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className={styles.input}
+            placeholder="(555) 123-4567"
+          />
+          <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+            Required for booking notifications.
+          </p>
         </div>
 
         <div className={styles.field}>

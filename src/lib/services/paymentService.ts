@@ -95,6 +95,15 @@ export const paymentService = {
             payment_status: "paid",
             status: "confirmed"
           });
+
+        // Query the first booking of this group to find the userId so we can send the notification
+        const bookingRecord = await db("bookings").where("group_id", groupId).orWhere("id", groupId).first();
+        if (bookingRecord?.user_id) {
+          // Fire-and-forget background notification (does not block webhook response)
+          // Import inline to avoid circular dependencies if any
+          const { notificationService } = require("./notificationService");
+          notificationService.sendBookingConfirmation(bookingRecord.user_id, groupId).catch(console.error);
+        }
       }
     }
 
