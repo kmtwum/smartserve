@@ -2,6 +2,13 @@
 
 ## 1. System Overview
 
+### Company
+We at Smart.Serve LLC do Low voltage electronic installations in residential homes and commercial office buildings.
+We install and do the following:  
+All style and model TV brackets and mount TVs from 30” to 100” we also install projectors and screens, in wall power kits and extending power outlets, sound bar mounts, in wall speakers and wire concealment, sound systems, Starlink, DirecTv, Dishnet satellite dishes, smart door bells, smart door locks, smart thermostats, wired security cameras, smart WiFi cameras, smart floodlights, all furniture deliveries with assembles, security cameras, alarm systems, audio video, PCs, fitness equipment assembles and custom home theaters.
+We also do IT hardware installations.
+
+### Platform
 smart.serve is a service booking platform for home appliance/device installations. Users can:
 
 * Create accounts
