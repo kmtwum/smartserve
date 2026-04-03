@@ -114,6 +114,24 @@ export const cartService = {
       return { id: existing.id, deleted: true };
     }
   },
+  
+  /**
+   * Sets a specific quantity for a service in the user's cart.
+   */
+  async updateQuantity(userId: string, serviceId: number, quantity: number) {
+    const db = getDb();
+    
+    if (quantity <= 0) {
+      return this.removeFromCart(userId, serviceId, true);
+    }
+
+    const [updated] = await db("cart_items")
+      .where({ user_id: userId, service_id: serviceId })
+      .update({ quantity })
+      .returning("*");
+
+    return updated;
+  },
 
   /**
    * Clears the user's cart entirely.

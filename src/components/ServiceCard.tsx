@@ -29,6 +29,7 @@ export default function ServiceCard({
   index = 0,
 }: ServiceCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const router = useRouter();
 
   const handleAddToCart = async () => {
@@ -37,7 +38,7 @@ export default function ServiceCard({
       const res = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ serviceId: id, action: "add" }),
+        body: JSON.stringify({ serviceId: id, action: "add", quantity }),
       });
 
       if (res.status === 401) {
@@ -56,7 +57,7 @@ export default function ServiceCard({
           (t) => (
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <span>
-                <strong>{name}</strong> added to cart!
+                <strong>{name}</strong> {quantity > 1 ? `(x${quantity}) ` : ""}added to cart!
               </span>
               <button
                 onClick={() => {
@@ -80,6 +81,9 @@ export default function ServiceCard({
           { duration: 4000 }
         );
       });
+      
+      // Reset quantity after successful add
+      setQuantity(1);
     } catch (error) {
       console.error(error);
       alert("Something went wrong adding item to the cart.");
@@ -87,6 +91,9 @@ export default function ServiceCard({
       setIsAdding(false);
     }
   };
+
+  const incrementQty = () => setQuantity(q => q + 1);
+  const decrementQty = () => setQuantity(q => Math.max(1, q - 1));
 
   const formattedPrice = typeof price === "string" ? parseFloat(price).toFixed(2) : price.toFixed(2);
   const style = { animationDelay: `${index * 0.1}s` };
@@ -107,13 +114,34 @@ export default function ServiceCard({
             <span className={styles.durationIcon}>⏱</span>
             {formatDuration(duration_minutes)}
           </span>
-          <button 
-            className={styles.addToCartBtn} 
-            onClick={handleAddToCart}
-            disabled={isAdding}
-          >
-            {isAdding ? "Adding..." : "Add to Cart"}
-          </button>
+          <div className={styles.actions}>
+            <div className={styles.quantitySelector}>
+              <button 
+                className={styles.qtyBtn} 
+                onClick={decrementQty} 
+                disabled={quantity <= 1 || isAdding}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <span className={styles.qtyValue}>{quantity}</span>
+              <button 
+                className={styles.qtyBtn} 
+                onClick={incrementQty} 
+                disabled={isAdding}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+            <button 
+              className={styles.addToCartBtn} 
+              onClick={handleAddToCart}
+              disabled={isAdding}
+            >
+              {isAdding ? "Adding..." : "Add to Cart"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

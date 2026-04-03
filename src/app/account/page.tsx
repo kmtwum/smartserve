@@ -63,22 +63,23 @@ export default async function AccountPage() {
 
               let totalGroupPrice = 0;
               group.forEach(b => {
-                totalGroupPrice += typeof b.price === 'string' ? parseFloat(b.price) : Number(b.price);
+                const price = typeof b.price === 'string' ? parseFloat(b.price) : Number(b.price);
+                totalGroupPrice += price * b.quantity;
               });
               
               return (
                 <div key={groupId} style={{ border: "1px solid var(--card-border)", padding: "1.5rem", borderRadius: "8px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
                     <div>
-                      <h3 style={{ fontSize: "1.125rem", fontWeight: 600 }}>Invoice bundled</h3>
-                      <p style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>Order Date: {datePrefix}</p>
+                      <h3 style={{ fontSize: "1.125rem", fontWeight: 600 }}>Order Summary</h3>
+                      <p style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>Scheduled for: {datePrefix}</p>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <p style={{ 
                         fontSize: "0.875rem", 
                         textTransform: "capitalize", 
                         fontWeight: 600, 
-                        color: paymentStatus === "paid" ? "green" : "goldenrod" 
+                        color: paymentStatus === "paid" ? "#10b981" : "#f59e0b" 
                       }}>
                         {paymentStatus}
                       </p>
@@ -90,10 +91,15 @@ export default async function AccountPage() {
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {group.map((b) => (
-                      <div key={b.id} style={{ display: "flex", justifyContent: "space-between", padding: "0.75rem", backgroundColor: "var(--background)", borderRadius: "6px" }}>
+                      <div key={b.id} style={{ display: "flex", justifyContent: "space-between", padding: "0.75rem", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px" }}>
                         <div>
-                          <p style={{ fontSize: "0.95rem", fontWeight: 500 }}>{b.service_name}</p>
-                          <p style={{ fontSize: "0.80rem", color: "var(--text-muted)" }}>{b.time_slot}</p>
+                          <p style={{ fontSize: "0.95rem", fontWeight: 500 }}>
+                            {b.service_name} {b.quantity > 1 ? `(x${b.quantity})` : ''}
+                          </p>
+                          <p style={{ fontSize: "0.80rem", color: "var(--text-muted)" }}>Start Time: {b.time_slot}</p>
+                        </div>
+                        <div style={{ textAlign: "right", fontSize: "0.875rem" }}>
+                          <span>${( (typeof b.price === 'string' ? parseFloat(b.price) : Number(b.price)) * b.quantity ).toFixed(2)}</span>
                         </div>
                       </div>
                     ))}

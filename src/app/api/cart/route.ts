@@ -24,18 +24,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { serviceId, action = "add" } = await request.json();
+    const { serviceId, action = "add", quantity = 1 } = await request.json();
 
     if (!serviceId) {
       return NextResponse.json({ message: "serviceId is required" }, { status: 400 });
     }
 
     if (action === "add") {
-      const item = await cartService.addToCart(session.user.id, serviceId);
+      const item = await cartService.addToCart(session.user.id, serviceId, quantity);
       return NextResponse.json({ message: "Item added", item }, { status: 200 });
     } else if (action === "remove") {
       const result = await cartService.removeFromCart(session.user.id, serviceId, true);
       return NextResponse.json({ message: "Item removed", result }, { status: 200 });
+    } else if (action === "update") {
+      const item = await cartService.updateQuantity(session.user.id, serviceId, quantity);
+      return NextResponse.json({ message: "Item updated", item }, { status: 200 });
     } else {
       return NextResponse.json({ message: "Invalid action" }, { status: 400 });
     }

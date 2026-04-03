@@ -23,7 +23,7 @@ export const bookingService = {
       .join("services", "bookings.service_id", "=", "services.id")
       .where("bookings.date", dateString)
       .whereIn("bookings.status", ["pending", "confirmed"])
-      .select("bookings.time_slot", "services.duration_minutes");
+      .select("bookings.time_slot", "bookings.quantity", "services.duration_minutes");
 
     // 3. Define operating hours limits
     const startHour = 9; // 9:00 AM
@@ -46,7 +46,7 @@ export const bookingService = {
       const startMinuteOffset = (bHour - startHour) * 60 + bMin;
       const startIndex = Math.floor(startMinuteOffset / scheduleGranularity);
       
-      const duration = booking.duration_minutes;
+      const duration = booking.duration_minutes * booking.quantity;
       const endIndex = Math.ceil((startMinuteOffset + duration) / scheduleGranularity);
 
       for (let i = startIndex; i < endIndex; i++) {
@@ -116,32 +116,32 @@ export const bookingService = {
       const groupId = crypto.randomUUID();
 
       for (const item of items) {
-        // Handle quantity properly (e.g. 2 TV mounts = 2 back-to-back bookings)
-        for (let q = 0; q < item.quantity; q++) {
-          const hh = currentHour.toString().padStart(2, "0");
-          const mm = currentMinute.toString().padStart(2, "0");
-          const slot = `${hh}:${mm}`;
+        // Consolidation: Create 1 row per service type, using quantity field
+        const hh = currentHour.toString().padStart(2, "0");
+        const mm = currentMinute.toString().padStart(2, "0");
+        const slot = `${hh}:${mm}`;
 
-          const [booking] = await trx("bookings")
-            .insert({
-              user_id: userId,
-              service_id: item.service_id,
-              date: dateString,
-              time_slot: slot,
-              status: "pending",
-              payment_status: "pending",
-              group_id: groupId,
-            })
-            .returning("*");
+        const [booking] = await trx("bookings")
+          .insert({
+            user_id: userId,
+            service_id: item.service_id,
+            date: dateString,
+            time_slot: slot,
+            quantity: item.quantity,
+            status: "pending",
+            payment_status: "pending",
+            group_id: groupId,
+          })
+          .returning("*");
 
-          insertedBookings.push(booking);
+        insertedBookings.push(booking);
 
-          // Advance the current time for the next item in the chronological setup
-          currentMinute += item.duration_minutes;
-          while (currentMinute >= 60) {
-            currentHour += 1;
-            currentMinute -= 60;
-          }
+        // Advance the current time for the next DISTINCT item in the chronological setup
+        // Total duration for this service type = quantity * unit duration
+        currentMinute += (item.duration_minutes * item.quantity);
+        while (currentMinute >= 60) {
+          currentHour += 1;
+          currentMinute -= 60;
         }
       }
 
@@ -167,6 +167,7 @@ export const bookingService = {
         "bookings.id",
         "bookings.date",
         "bookings.time_slot",
+        "bookings.quantity",
         "bookings.status",
         "bookings.payment_status",
         "bookings.created_at",

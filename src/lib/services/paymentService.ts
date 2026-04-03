@@ -21,7 +21,7 @@ export const paymentService = {
         this.where("bookings.group_id", groupId).orWhere("bookings.id", groupId);
       })
       .andWhere("bookings.user_id", userId)
-      .select("services.name", "services.price");
+      .select("services.name", "services.price", "bookings.quantity");
 
     if (bookings.length === 0) {
       throw new Error("No bookings found for this group.");
@@ -40,7 +40,7 @@ export const paymentService = {
           },
           unit_amount: unitAmount,
         },
-        quantity: 1, 
+        quantity: b.quantity, 
       };
     });
 
